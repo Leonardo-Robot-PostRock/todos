@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { IoTrashOutline } from "react-icons/io5";
-import * as apiTodos from '@/todos/helpers/todos';
+import * as todosApi from '@/todos/helpers/todos';
 
 export const NewTodo = () => {
     const [description, setDescription] = useState('');
@@ -14,7 +14,7 @@ export const NewTodo = () => {
 
         if (description.trim().length === 0) return;
 
-        const todo = await apiTodos.createTodo(description);
+        const todo = await todosApi.createTodo(description);
         setDescription('');
         router.refresh();
         return todo;
@@ -35,7 +35,7 @@ export const NewTodo = () => {
             <span className='flex flex-1'></span>
 
             <button
-                onClick={() => apiTodos.deleteCompletedTodos()}
+                onClick={() => todosApi.deleteCompletedTodos()}
                 type='button' className="flex items-center justify-center rounded ml-2 bg-red-400 p-2 text-white hover:bg-red-700 transition-all">
                 <IoTrashOutline />
                 <span className="ml-2">
