@@ -3,9 +3,9 @@
 // import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { IoTrashOutline } from "react-icons/io5";
+
 import { addTodo } from "../actions/todo-actions";
 // import * as todosApi from '@/todos/helpers/todos';
-
 
 export const NewTodo = () => {
     const [description, setDescription] = useState('');
@@ -20,11 +20,12 @@ export const NewTodo = () => {
         setDescription('');
     }
 
+
     // const deleteCompleted = async () => {
     //     await todosApi.deleteCompletedTodos();
     //     router.refresh();
     // }
-
+          
     return (
         <form onSubmit={onSubmit} className='flex w-full'>
             <input type="text"
@@ -40,7 +41,7 @@ export const NewTodo = () => {
             <span className='flex flex-1'></span>
 
             <button
-                // onClick={() => deleteCompletedTodos()}
+                onClick={() => deleteCompleted()}
                 type='button' className="flex items-center justify-center rounded ml-2 bg-red-400 p-2 text-white hover:bg-red-700 transition-all">
                 <IoTrashOutline />
                 <span className="ml-2">
