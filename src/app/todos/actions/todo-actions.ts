@@ -25,8 +25,20 @@ export const addTodo = async (description: string) => {
         const todo = await prisma.todo.create({ data: { description } });
         revalidatePath('/dashboard/server-todos');
         return todo;
-
+        
     } catch {
         message: 'Error creando todo'
+    }
+}
+
+export const deleteCompleted = async (): Promise<void> => {
+    try {
+        await prisma.todo.deleteMany({
+            where: { complete: true }
+        })
+        revalidatePath('/dashboard/server-todos');
+        
+    } catch {
+        message: 'Error al borrar todo/s'
     }
 }
