@@ -19,6 +19,67 @@ export const authOptions: NextAuthOptions = {
         }),
 
     ],
+
+    session: {
+        strategy: 'jwt'
+    },
+
+    callbacks: {
+        async signIn({ user, account, profile, email, credentials }) {
+            const emailProfile = profile?.email;
+            if (!emailProfile) {
+                return false;
+            }
+
+            let existingUser = await prisma.user.findUnique({
+                where: { email: emailProfile },
+                include: { accounts: true }
+            })
+
+            if (existingUser) {
+                const accountExists = existingUser.accounts.some(
+                    acc => acc.provider === account?.provider && acc.providerAccountId === account.providerAccountId
+                );
+
+                if (account && !accountExists) {
+                    await prisma.account.create({
+                        data: {
+                            userId: existingUser.id,
+                            type: account.type,
+                            provider: account.provider,
+                            providerAccountId: account.providerAccountId,
+                            refresh_token: account.refresh_token,
+                            refresh_token_expires_in: account.refresh_token_expires_in as number | null,
+                            access_token: account.access_token,
+                            expires_at: account.expires_at,
+                            token_type: account.token_type,
+                            scope: account.scope,
+                            id_token: account.id_token,
+                            session_state: account.session_state
+                        }
+                    });
+                }
+
+                user.id = existingUser.id;
+                return true;
+            }
+
+            return true;
+        },
+
+        async jwt({ token, user, account, profile }) {
+            const dbUser = await prisma.user.findUnique({ where: { email: token.email ?? 'no-email' } });
+
+            token.roles = dbUser?.roles ?? ['no-roles'];
+            token.id = dbUser?.id ?? ['no-uuid'];
+
+            return token;
+        },
+
+        async session({ session, token, user }) {
+            return session;
+        }
+    }
 }
 
 const handler = NextAuth(authOptions);
