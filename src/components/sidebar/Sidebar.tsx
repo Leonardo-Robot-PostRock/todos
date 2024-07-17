@@ -2,8 +2,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { SidebarItem } from './SidebarItem';
 import { IoBasketOutline, IoCalendarOutline, IoCheckboxOutline, IoCodeWorkingOutline, IoListOutline, IoPerson } from 'react-icons/io5';
-import { auth } from '@/auth';
 import { LogoutButton } from './LogoutButton';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
 const menuItem = [
     {
@@ -38,7 +39,7 @@ const menuItem = [
 ]
 
 export const Sidebar = async () => {
-    const session = await auth();
+    const session = await getServerSession(authOptions);
 
     const avatarUrl = session?.user?.image ? session.user.image : '/images/avatar/user.png';
 
