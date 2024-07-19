@@ -22,11 +22,11 @@ export const authOptions: NextAuthOptions = {
         CredentialsProvider({
             name: "Credentials",
             credentials: {
-                email: { label: "Correo electrónico", type: "text", placeholder: "usuario@email.com" },
+                email: { label: "Correo electrónico", type: "email", placeholder: "usuario@email.com" },
                 password: { label: "Contraseña", type: "password", placeholder: "*******" }
             },
             async authorize(credentials, req) {
-                const user = await signInEmailPassword(credentials?.email!, credentials?.password!)
+                const user = await signInEmailPassword(credentials!.email, credentials!.password)
 
                 if (user) {
                     return user;
@@ -44,10 +44,12 @@ export const authOptions: NextAuthOptions = {
 
     callbacks: {
         async signIn({ user, account, profile, email, credentials }) {
-            const emailProfile = profile?.email;
+            const emailProfile = profile?.email || user?.email;
             if (!emailProfile) {
                 return false;
             }
+
+            console.log(emailProfile);
 
             let existingUser = await prisma.user.findUnique({
                 where: { email: emailProfile },
