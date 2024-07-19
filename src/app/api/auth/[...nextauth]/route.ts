@@ -49,8 +49,6 @@ export const authOptions: NextAuthOptions = {
                 return false;
             }
 
-            console.log(emailProfile);
-
             let existingUser = await prisma.user.findUnique({
                 where: { email: emailProfile },
                 include: { accounts: true }
