@@ -25,12 +25,6 @@ export async function GET(request: Request) {
         }
     })
 
-
-    await prisma.todo.createMany({
-        data: [
-        ]
-    })
-
     return NextResponse.json({
         message: 'Seed executed'
     })
