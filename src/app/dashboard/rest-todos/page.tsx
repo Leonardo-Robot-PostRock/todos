@@ -1,8 +1,7 @@
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-import { TodosGrid } from "@/app/todos";
-import { NewTodo } from "@/app/todos/components/NewTodo";
+import { NewTodo, TodosGrid } from "@/app/todos";
 import { getUserServerSession } from "@/auth/auth-actions";
 import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
